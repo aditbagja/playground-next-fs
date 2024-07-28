@@ -8,12 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Users } from "@/utils/types";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Home = () => {
-  const [userList, setUserList] = useState([]);
+  const [userList, setUserList] = useState<Users[]>([]);
 
   async function fetchUserData() {
     const allUserData = await axios.get("http://localhost:3000/api/getUser");
@@ -41,6 +42,9 @@ const Home = () => {
     <main>
       <section className="py-32">
         <div className="container mx-auto">
+          <Button asChild>
+            <Link href="/create">Insert New Data</Link>
+          </Button>
           <Table>
             <TableHeader>
               <TableRow>
@@ -51,7 +55,7 @@ const Home = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {userList?.map((data: any) => (
+              {userList?.map((data: Users) => (
                 <TableRow key={data.user_id}>
                   <TableCell className="font-medium">{data.user_id}</TableCell>
                   <TableCell>{data.name}</TableCell>
