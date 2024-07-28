@@ -61,7 +61,9 @@ const Home = () => {
                   <TableCell>{data.name}</TableCell>
                   <TableCell>{data.alamat}</TableCell>
                   <TableCell className="flex gap-3">
-                    <Button>Edit</Button>
+                    <Button asChild>
+                      <Link href={`/edit/${data.user_id}`}>Edit</Link>
+                    </Button>
                     <Button asChild variant="secondary">
                       <Link href={`/${data.user_id}`}>Detail</Link>
                     </Button>
