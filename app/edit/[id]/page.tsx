@@ -31,21 +31,26 @@ const formSchema = z.object({
 const Edit = ({ params }: { params: { id: number } }) => {
   const route = useRouter();
   const [userData, setUserData] = useState<Users>();
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+
   useEffect(() => {
     async function fetchUserData() {
       const response = await axios.get(
         `http://localhost:3000/api/detailUser?id=${params.id}`
       );
-
-      setUserData(response.data.data);
+      const data = response.data.data;
+      setUserData(data);
+      form.reset({
+        name: data.name,
+        alamat: data.alamat,
+      });
     }
 
     fetchUserData();
-  }, [params.id]);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-  });
+  }, [params.id, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const response = await axios.put(
@@ -73,11 +78,7 @@ const Edit = ({ params }: { params: { id: number } }) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input
-                      defaultValue={userData?.name}
-                      placeholder="Name"
-                      {...field}
-                    />
+                    <Input placeholder="Name" {...field} />
                   </FormControl>
                   <FormDescription>Silahkan isi Kolom Name</FormDescription>
                   <FormMessage />
@@ -92,11 +93,7 @@ const Edit = ({ params }: { params: { id: number } }) => {
                 <FormItem>
                   <FormLabel>Alamat</FormLabel>
                   <FormControl>
-                    <Input
-                      defaultValue={userData?.alamat}
-                      placeholder="Alamat"
-                      {...field}
-                    />
+                    <Input placeholder="Alamat" {...field} />
                   </FormControl>
                   <FormDescription>Silahkan isi Kolom Alamat</FormDescription>
                   <FormMessage />
